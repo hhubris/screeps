@@ -28,6 +28,24 @@ var spawner = {
 				'min': 2,
 				'body': [WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
 			}			
+		},
+		500: {
+			'harvester' : {
+				'min': 2,
+				'body': [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
+			},
+			'upgrader' : {
+				'min': 2,
+				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+			},
+			'builder' : {
+				'min': 2,
+				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+			},
+			'repair' : {
+				'min': 1,
+				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+			}						
 		}
 	},
 
@@ -120,10 +138,32 @@ var spawner = {
 		// console.log(roleToSpawn);
 
 		if (roleToSpawn) {
-			data = goalMap[roleToSpawn];
+			const data = goalMap[roleToSpawn];
 			var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
 			console.log("spawning "  + newName + " [" + roleToSpawn + "]");
 		}
+	},
+
+	forceSpawn: function(spawn, roleToSpawn) {
+		if (spawn.spawning) {
+			// console.log("spawning...");
+			return;
+		}
+
+		const room = spawn.room;
+		const creepMap = this.createCreepMap(room);
+		const goalMap = this.getEnergyMap(room.energyCapacityAvailable);
+
+		// console.log(JSON.stringify(goalMap));
+
+		if (!goalMap) {
+			console.log("Unable to find goal map");
+			return;
+		}
+
+		const data = goalMap[roleToSpawn];
+		var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
+		console.log("spawning "  + newName + " [" + roleToSpawn + "]");
 
 	}
 
