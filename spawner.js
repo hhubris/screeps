@@ -1,52 +1,66 @@
-var spawner = {
+let lib = require('lib');
+
+let spawner = {
 
 	energyMap: {
 		300: {
-			'harvester' : {
-				'min': 2,
-				'body': [WORK,CARRY,CARRY,MOVE,MOVE]
+			'upgradeDrone' : {
+				'min' : 2,
+				'body': [WORK,CARRY,MOVE,MOVE],
 			},
-			'upgrader' : {
-				'min': 1,
-				'body': [WORK,CARRY,MOVE]
+			'buildDrone' : {
+				'min' : 2,
+				'body': [WORK,CARRY,MOVE,MOVE],								
 			},
-			'builder' : {
-				'min': 2,
-				'body': [WORK,CARRY,MOVE]
+			'repairDrone' : {
+				'min' : 2,
+				'body': [WORK,CARRY,MOVE,MOVE]
 			}
-		}, 
-		350: {
-			'harvester' : {
-				'min': 2,
-				'body': [WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+		},
+
+		400: {
+			'upgradeDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,CARRY,MOVE,MOVE,MOVE],
 			},
-			'upgrader' : {
-				'min': 1,
-				'body': [WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+			'buildDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,CARRY,MOVE,MOVE,MOVE],
 			},
-			'builder' : {
-				'min': 2,
-				'body': [WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+			'repairDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,CARRY,MOVE,MOVE,MOVE]
 			}			
 		},
-		500: {
-			'harvester' : {
-				'min': 3,
-				'body': [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
+		650: {
+			'upgradeDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
 			},
-			'upgrader' : {
-				'min': 2,
-				'body': [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+			'buildDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
 			},
-			'builder' : {
-				'min': 2,
-				'body': [WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
+			'repairDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE]
+			}						
+		},
+		750: {
+			'upgradeDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
 			},
-			'repair' : {
-				'min': 1,
-				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+			'buildDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+			},
+			'repairDrone' : {
+				'min' : 2,
+				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
 			}						
 		}
+
 	},
 
 	getEnergyMap(room, maxEnergyOnly) {
@@ -58,9 +72,9 @@ var spawner = {
 			return room.energyCapacityAvailable >= energy ? this.energyMap[energy] : undefined;
 		}
 		else {
-			for (var i = 0; i < keys.length; i++) {
-				if (keys[i] > room.energyAvailable) {
-					return this.energyMap[i];
+			for (let i = 0; i < keys.length; i++) {
+				if (keys[i] <= room.energyAvailable) {
+					return this.energyMap[keys[i]];
 				}
 			}
 
@@ -68,23 +82,8 @@ var spawner = {
 		}
 	},
 
-	bodyPartCost(part) {
-		const name = part.toLowerCase();
-		const cost = BODYPART_COST[name];
-
-		if (!cost) {
-			throw "Invalid body part " + name;
-		}
-
-		return cost;
-	},
-
-	totalBodyCost(parts) {
-		return parts.reduce((pv, cv) => pv + this.bodyPartCost(cv), 0);
-	},
-	
 	createCreepMap(room) {
-		var result = {};
+		let result = {};
 
 		for (const i in Game.creeps) {
 			const creep = Game.creeps[i];
@@ -110,7 +109,7 @@ var spawner = {
 			// console.log(currCnt + " " + role);
 
 			if (goalMap[role].min > currCnt) {
-				const cost = this.totalBodyCost(goalMap[role].body);
+				const cost = lib.totalBodyCost(goalMap[role].body);
 			    // console.log(cost + " " + room.energyAvailable);
 				if (cost <= room.energyAvailable) {
 					return role;
@@ -119,14 +118,6 @@ var spawner = {
 		}
 
 		return undefined;
-	},
-
-	creepDump() {
-
-		for (const i in Game.creeps) {
-			const creep = Game.creeps[i];
-			console.log(creep.name + " is a " + creep.memory.role);
-		}
 	},
 
 	spawnCreep(spawn) {
@@ -152,9 +143,9 @@ var spawner = {
 
 		if (roleToSpawn) {
 			const data = goalMap[roleToSpawn];
-			var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
+			let newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
 			console.log("spawning "  + newName + " [" + roleToSpawn + "]");
-			this.creepDump();
+			lib.creepDump();
 		}
 	},
 
@@ -168,7 +159,7 @@ var spawner = {
 		const creepMap = this.createCreepMap(room);
 		const goalMap = this.getEnergyMap(room, false);
 
-		// console.log(JSON.stringify(goalMap));
+		console.log(JSON.stringify(goalMap));
 
 		if (!goalMap) {
 			console.log("Unable to find goal map");
@@ -176,12 +167,18 @@ var spawner = {
 		}
 
 		const data = goalMap[roleToSpawn];
-		const cost = this.totalBodyCost(goalMap[roleToSpawn].body);
+
+		if (!data) {
+			console.log("Unable to find data for role " + roleToSpawn);
+			return;
+		}
+
+		const cost = lib.totalBodyCost(data.body);
 
 		if (cost < room.energyAvailable) {
-			var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
+			let newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
 			console.log("spawning "  + newName + " [" + roleToSpawn + "]");
-			this.creepDump();
+			lib.creepDump();
 		}
 
 	}

@@ -1,18 +1,18 @@
 
-var lib = {
+let lib = {
 
         indexForMinVal(arr, i, j) {
             return arr[i] < arr[j] ? i : j;
         },
 
         findIndex(arr, cmp) {
-            if (arr.length == 1) {
+            if (arr.length < 2) {
                 return 0;
             }
 
             let minIdx = 0;
 
-            for (var i = 1; i < arr.length; i++) {
+            for (let i = 1; i < arr.length; i++) {
                 minIdx = cmp(arr, minIdx, i);
             }
 
@@ -40,6 +40,35 @@ var lib = {
             if (typeof source != 'undefined') {
                 result[source]++;
             }
+        },
+
+        getRole(creep) {
+            return creep.memory.role;
+        },
+
+        bodyPartCost(part) {
+            const name = part.toLowerCase();
+            const cost = BODYPART_COST[name];
+
+            if (!cost) {
+                throw "Invalid body part " + name;
+            }
+
+            return cost;
+        },
+
+        totalBodyCost(parts) {
+            return parts.reduce((pv, cv) => pv + this.bodyPartCost(cv), 0);
+        },
+        
+        creepDump() {
+
+            let sortedCreeps = _.sortBy(Game.creeps, this.getRole);
+
+            _.each(sortedCreeps, function(creep) {
+                console.log(creep.name + " is a " + creep.memory.role +
+                    " using source " + creep.memory.source);
+            });
         }
 }
 
