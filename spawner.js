@@ -31,16 +31,16 @@ var spawner = {
 		},
 		500: {
 			'harvester' : {
-				'min': 2,
+				'min': 3,
 				'body': [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
 			},
 			'upgrader' : {
 				'min': 2,
-				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+				'body': [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
 			},
 			'builder' : {
 				'min': 2,
-				'body': [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+				'body': [WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
 			},
 			'repair' : {
 				'min': 1,
@@ -49,21 +49,26 @@ var spawner = {
 		}
 	},
 
-	getEnergyMap : function(energy) {
+	getEnergyMap(room, maxEnergyOnly) {
 
 		const keys = Object.keys(this.energyMap).reverse();
 
-		for (var i = 0; i < keys.length; i++) {
-
-			if (keys[i] <= energy) {
-				return this.energyMap[keys[i]];
-			}
+		if (maxEnergyOnly) {
+			const energy = keys[0];
+			return room.energyCapacityAvailable >= energy ? this.energyMap[energy] : undefined;
 		}
+		else {
+			for (var i = 0; i < keys.length; i++) {
+				if (keys[i] > room.energyAvailable) {
+					return this.energyMap[i];
+				}
+			}
 
-		return undefined;
+			return undefined;
+		}
 	},
 
-	bodyPartCost: function(part) {
+	bodyPartCost(part) {
 		const name = part.toLowerCase();
 		const cost = BODYPART_COST[name];
 
@@ -74,11 +79,11 @@ var spawner = {
 		return cost;
 	},
 
-	totalBodyCost: function(parts) {
-		return parts.reduce((pv, cv) => pv+ this.bodyPartCost(cv), 0);
+	totalBodyCost(parts) {
+		return parts.reduce((pv, cv) => pv + this.bodyPartCost(cv), 0);
 	},
 	
-	createCreepMap: function(room) {
+	createCreepMap(room) {
 		var result = {};
 
 		for (const i in Game.creeps) {
@@ -99,7 +104,7 @@ var spawner = {
 		return result;
 	},
 
-	nextRoleToSpawn: function(room, goalMap, creepMap) {
+	nextRoleToSpawn(room, goalMap, creepMap) {
 		for (const role in goalMap) {
 			const currCnt = (role in creepMap) ? creepMap[role] : 0;
 			// console.log(currCnt + " " + role);
@@ -116,7 +121,15 @@ var spawner = {
 		return undefined;
 	},
 
-	spawnCreep: function(spawn) {
+	creepDump() {
+
+		for (const i in Game.creeps) {
+			const creep = Game.creeps[i];
+			console.log(creep.name + " is a " + creep.memory.role);
+		}
+	},
+
+	spawnCreep(spawn) {
 
 		if (spawn.spawning) {
 			// console.log("spawning...");
@@ -125,7 +138,7 @@ var spawner = {
 
 		const room = spawn.room;
 		const creepMap = this.createCreepMap(room);
-		const goalMap = this.getEnergyMap(room.energyCapacityAvailable);
+		const goalMap = this.getEnergyMap(room, true);
 
 		// console.log(JSON.stringify(goalMap));
 
@@ -141,10 +154,11 @@ var spawner = {
 			const data = goalMap[roleToSpawn];
 			var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
 			console.log("spawning "  + newName + " [" + roleToSpawn + "]");
+			this.creepDump();
 		}
 	},
 
-	forceSpawn: function(spawn, roleToSpawn) {
+	forceSpawn(spawn, roleToSpawn) {
 		if (spawn.spawning) {
 			// console.log("spawning...");
 			return;
@@ -152,7 +166,7 @@ var spawner = {
 
 		const room = spawn.room;
 		const creepMap = this.createCreepMap(room);
-		const goalMap = this.getEnergyMap(room.energyCapacityAvailable);
+		const goalMap = this.getEnergyMap(room, false);
 
 		// console.log(JSON.stringify(goalMap));
 
@@ -162,8 +176,13 @@ var spawner = {
 		}
 
 		const data = goalMap[roleToSpawn];
-		var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
-		console.log("spawning "  + newName + " [" + roleToSpawn + "]");
+		const cost = this.totalBodyCost(goalMap[roleToSpawn].body);
+
+		if (cost < room.energyAvailable) {
+			var newName = spawn.createCreep(data.body, undefined, {role: roleToSpawn});
+			console.log("spawning "  + newName + " [" + roleToSpawn + "]");
+			this.creepDump();
+		}
 
 	}
 

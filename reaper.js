@@ -41,15 +41,6 @@ var reaper = {
 				spawner.forceSpawn(spawn, 'harvester');
 			}
 		}
-
-		if (Game.time % 100 == 0) {
-			console.log("Creep dump...");
-
-			for (const i in Game.creeps) {
-				const creep = Game.creeps[i];
-				console.log(creep.name + " is a " + creep.memory.role);
-			}
-		}
 	}
 };
 
