@@ -10,6 +10,7 @@ var reaper = {
 
 	    for(var name in Memory.creeps) {
 	        if(!Game.creeps[name]) {
+	        	delete Memory.repairTargets[name];
 	            delete Memory.creeps[name];
 	            console.log('Clearing non-existing creep memory:', name);
 	        }

@@ -52,11 +52,11 @@ let spawner = {
 				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
 			},
 			'buildDrone' : {
-				'min' : 2,
+				'min' : 3,
 				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
 			},
 			'repairDrone' : {
-				'min' : 2,
+				'min' : 3,
 				'body': [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
 			}						
 		}

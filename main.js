@@ -4,13 +4,15 @@ var droneFactory = require('DroneFactory');
 
 module.exports.loop = function () {
 
+    /* global Game */
+    "use strict";
     reaper.reap();
 
-    for (const i in Game.spawns) {
+    for (let i in Game.spawns) {
         spawner.spawnCreep(Game.spawns[i]);
     }
 
-    for(var name in Game.creeps) {
+    for(let name in Game.creeps) {
         var creep = Game.creeps[name];
 
         if (creep.memory.role.endsWith('Drone')) {
