@@ -63,8 +63,25 @@ let spawner = {
                 'min': 2,
                 'body': [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
             }                       
+        },
+        900: {
+            'upgradeDrone': {
+                'min': 2,
+                'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+            },
+            'buildDrone': {
+                'min': 4,
+                'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+            },
+            'repairDrone': {
+                'min': 3,
+                'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+            },
+            'constructFillerDrone': {
+                'min': 2,
+                'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+            }                               
         }
-
     },
 
     getEnergyMap(room, maxEnergyOnly) {

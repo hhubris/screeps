@@ -1,11 +1,16 @@
+'use strict';
+
 var reaper = require('reaper');
 var spawner = require('spawner');
 var droneFactory = require('DroneFactory');
+var lib = require('lib');
+
+global.creepDump = function creepDump() {
+    lib.creepDump();
+};
 
 module.exports.loop = function mainLoop() {
 
-    /* global Game */
-    'use strict';
     reaper.reap();
 
     for (let i in Game.spawns) {
