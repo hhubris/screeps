@@ -2,10 +2,10 @@ var reaper = require('reaper');
 var spawner = require('spawner');
 var droneFactory = require('DroneFactory');
 
-module.exports.loop = function () {
+module.exports.loop = function mainLoop() {
 
     /* global Game */
-    "use strict";
+    'use strict';
     reaper.reap();
 
     for (let i in Game.spawns) {
@@ -21,4 +21,4 @@ module.exports.loop = function () {
     }
 
     // console.log("limit: " + Game.cpu.limit + " tickLimit: " + Game.cpu.tickLimit + " bucket: " + Game.cpu.bucket);
- }
+};

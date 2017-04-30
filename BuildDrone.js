@@ -1,9 +1,9 @@
 var AbstractDrone = require('AbstractDrone');
 
 class BuildDrone extends AbstractDrone {
-	
+    
 
-	buildObjects(creep) {
+    buildObjects(creep) {
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
         
         if(targets.length) {
@@ -15,11 +15,11 @@ class BuildDrone extends AbstractDrone {
         }
 
         return false;
-	}
+    }
 
-	run() {
-		super.run(this.buildObjects);
-	}
+    run() {
+        super.run(this.buildObjects.bind(this));
+    }
 }
 
 module.exports = BuildDrone;
