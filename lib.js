@@ -60,17 +60,41 @@ let lib = {
     totalBodyCost(parts) {
         return parts.reduce((pv, cv) => pv + this.bodyPartCost(cv), 0);
     },
+
+    createBody(parts) {
+        return _.map(parts, function createPart(value) {
+            // console.log('v: ' + JSON.stringify(value));
+            return _.fill(Array(value[1]), value[0]);
+        });
+    },
     
     displayCreep(creep) {
-        console.log(creep.name + ' is a ' + creep.memory.role +
-            ' using source ' + creep.memory.source);
+        var desc = creep.name + ' is a ' + creep.memory.role;
+
+        if (typeof creep.memory.source != 'undefined') {
+            desc += ' using source ' + creep.memory.source;
+        }
+
+        console.log(desc);
+    },
+
+    displayCreeps() {
+        let sortedCreeps = _.sortBy(Game.creeps, this.getRole);
+        _.each(sortedCreeps, this.displayCreep);
+    },
+
+    displayRoom(room) {
+        console.log(room.name + ' energy ' + room.energyAvailable + '/' + room.energyCapacityAvailable);
+    },
+
+    displayRooms() {
+        _.forEach(Game.rooms, this.displayRoom);
+
     },
 
     creepDump() {
-
-        let sortedCreeps = _.sortBy(Game.creeps, this.getRole);
-
-        _.each(sortedCreeps, this.displayCreep);
+        this.displayRooms();
+        this.displayCreeps();
     }
 };
 

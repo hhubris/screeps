@@ -78,7 +78,7 @@ let spawner = {
                 'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
             },
             'constructFillerDrone': {
-                'min': 2,
+                'min': 3,
                 'body': [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
             }                               
         }

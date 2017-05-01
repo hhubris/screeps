@@ -32,8 +32,7 @@ class RepairDrone extends AbstractDrone {
         return false;
     }
 
-
-    repairObjects(creep) {
+    findRepairTarget(creep) {
 
         const CONTAINER_FILTER = {
             filter: (structure) => {
@@ -55,8 +54,6 @@ class RepairDrone extends AbstractDrone {
 
         const REPAIR_PRIORITY = [CONTAINER_FILTER, ROAD_FILTER, WALL_FILTER];
 
-        let target = undefined;
-
         for (var filterIdx = 0; filterIdx < REPAIR_PRIORITY.length; filterIdx++) {
             let filter = REPAIR_PRIORITY[filterIdx];
 
@@ -74,6 +71,8 @@ class RepairDrone extends AbstractDrone {
 
             if (targets.length) {
 
+                let target = undefined;
+
                 for (var i = 0; i < targets.length; i++) {
                     if (!this.repairAlreadyScheduled(creep.name, targets[i])) {
                         if (target == undefined || target.hits > targets[i].hits) {
@@ -83,18 +82,25 @@ class RepairDrone extends AbstractDrone {
                 }
 
                 if (target) {
-                    this.scheduleRepair(creep.name, target.pos);
                     /*
                     console.log(creep.name + "[" + creep.pos.x + "," + creep.pos.y +
                         "] scheduled repair for a " + target.structureType + " at " +
                         target.pos.x + "," + target.pos.y);
                     */
-                    break;
+                    return target;
                 }
             }
         }
 
+        return undefined;
+    }
+
+    repairObjects(creep) {
+
+        const target = this.findRepairTarget(creep);
+
         if (target) {
+            this.scheduleRepair(creep.name, target.pos);
 
             if(creep.repair(target) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});

@@ -11,7 +11,7 @@ class ConstructFillerDrone extends AbstractDrone {
             }
         });
 
-        // console.log('filler: ' + JSON.stringify(targets));
+        // console.log(creep.name + ' lookning for structure to fill found: ' + JSON.stringify(targets));
 
         if(targets.length > 0) {
             if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
