@@ -6,6 +6,10 @@ class AbstractDrone {
         this.creep = creep;
     }
 
+    particpatesInFillingContainers() {
+        return true;
+    }
+
     run(callback) {
 
         let creep = this.creep;
@@ -21,12 +25,16 @@ class AbstractDrone {
         if (creep.memory.acting) {
 
             // first try to fill empty containers
-            let targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
-                }
-            });
+            let targets = [];
+            if (this.particpatesInFillingContainers()) {
+                targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_EXTENSION ||
+                                structure.structureType == STRUCTURE_SPAWN) &&
+                                structure.energy < structure.energyCapacity;
+                    }
+                });
+            }
 
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

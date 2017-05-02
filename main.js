@@ -11,6 +11,8 @@ global.creepDump = function creepDump() {
 
 module.exports.loop = function mainLoop() {
 
+    let start = Date.now();
+
     reaper.reap();
 
     for (let i in Game.spawns) {
@@ -25,5 +27,8 @@ module.exports.loop = function mainLoop() {
         }
     }
 
-    // console.log("limit: " + Game.cpu.limit + " tickLimit: " + Game.cpu.tickLimit + " bucket: " + Game.cpu.bucket);
+    // console.log('limit: ' + Game.cpu.limit + ' tickLimit: ' + Game.cpu.tickLimit + ' bucket: ' + Game.cpu.bucket);
+    let now = Date.now();
+    console.log('Processing time: ' + (now - start) + ' Tick time: ' + (now - Memory.lastEndTime));
+    Memory.lastEndTime = now;
 };

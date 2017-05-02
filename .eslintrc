@@ -140,6 +140,9 @@
     "MOVE": true,
     "CARRY": true,
     "WORK": true,
-    "Memory": true
+    "Memory": true,
+    "RAMPART_DECAY_AMOUNT": true,
+    "ROAD_DECAY_AMOUNT": true,
+    "CONTAINER_DECAY": true
   }
 }

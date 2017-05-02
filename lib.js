@@ -84,7 +84,10 @@ let lib = {
     },
 
     displayRoom(room) {
-        console.log(room.name + ' energy ' + room.energyAvailable + '/' + room.energyCapacityAvailable);
+        let progressPct = Math.round(room.controller.progress / room.controller.progressTotal * 1000) / 10;
+        console.log(room.name + ' energy ' + room.energyAvailable + '/' + room.energyCapacityAvailable +
+            ' controller ' + room.controller.progress + '/' + room.controller.progressTotal +
+            ' (' + progressPct + '%)');
     },
 
     displayRooms() {
